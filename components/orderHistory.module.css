@@ -1,0 +1,48 @@
+.invoiceDiv{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    background-color: #e0e0e0;
+}
+
+.detailsDiv{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px 40px;
+}
+.subDiv{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+.products{
+    display: flex;
+    flex-direction: column;
+}
+.productImages{
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+}
+.imageDiv{
+    display: flex;
+    flex-direction: row;
+    margin: 20px 0px;
+    gap: 18px;
+
+}
+.download{
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 600px){
+    .subDiv{
+        flex-direction: column;
+    }
+}

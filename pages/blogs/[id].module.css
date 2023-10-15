@@ -1,0 +1,42 @@
+.blog{
+    font-weight: 400;
+font-size: 18px;
+line-height: 30px;
+/* or 120% */
+margin : 30px 5% 50px 5%;
+text-align: justify;
+
+}
+
+.blogBy{
+    font-weight: 400;
+font-size: 18px;
+line-height: 25px;
+/* identical to box height, or 100% */
+
+letter-spacing: 0.01em;
+margin-bottom: 20px;
+}
+
+.name{
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 25px;
+    /* identical to box height, or 83% */
+    
+    letter-spacing: 0.01em;
+    margin-bottom: 10px;
+    color: #000000;
+}
+
+.post{
+    font-weight: 500;
+font-size: 14px;
+line-height: 20px;
+/* or 100% */
+
+letter-spacing: 0.05em;
+
+color: rgba(0, 0, 0, 0.5);
+margin-bottom: 40px;
+}

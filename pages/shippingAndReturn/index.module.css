@@ -1,0 +1,40 @@
+.main{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: auto;
+    margin-top: 8vh;
+    margin-bottom: 8vh;
+}
+
+.line{
+    opacity: 0.5 !important;
+}
+
+.heading{
+    text-align: center;
+    font-weight: 600;
+    font-size: 24px;
+    margin: 18px auto;
+    letter-spacing: 2px;
+    opacity: 0.7;
+}
+
+.paragraph{
+    font-size: 16px;
+    margin: 10px 0px;
+    font-weight: 400;
+}
+.subheading{
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 32px;
+    margin-bottom: 8px;
+}
+.link{
+    color: blue;
+}
+
+.listHeading{
+    margin-bottom: 10px;
+}

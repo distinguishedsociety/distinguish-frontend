@@ -1,0 +1,65 @@
+.profileCard{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin: 30px auto;
+    padding: 20px 10%;
+    align-items: center;
+}
+
+.profileImage{
+    background-color: #e9e9e9 ;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+.detailsGrid{
+    display: flex;
+    flex-direction: column;
+    margin-left: 26px;    
+}
+.name{
+    font-size: 20px;
+    font-weight: 600;
+}
+.email{
+    font-size: 18px;
+    opacity: 0.6;
+}
+.tableImg{
+    height: 150px;
+    width: 130px;
+}
+.imgCol{
+    /* height: 150px; */
+    width: 150px;
+}
+.tableMainText{
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.tablePriceText{
+    
+    font-size: 18px;
+    font-weight: 600;
+    opacity: 0.6;
+
+}
+.empty{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.emptyCart{
+    margin: 10% auto 0px auto;
+    height: 300px;
+    width: 300px;
+}
+.emptyText{
+    text-align: center;
+    opacity: 0.6;
+}

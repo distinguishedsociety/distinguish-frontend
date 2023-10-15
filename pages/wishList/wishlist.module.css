@@ -1,0 +1,34 @@
+.arrivalGrid{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: 70px;
+}
+.displayProductGrid{
+    margin-top: 4px;
+    margin-bottom: 30px;
+}
+
+.latestArrivalsDiv{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 80px;
+}
+.emptyCart{
+    margin: 10% auto 0px auto;
+    height: 300px;
+    width: 300px;
+}
+.empty{
+width: 100vw;
+height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+}
+.emptyText{
+text-align: center;
+opacity: 0.6;
+}

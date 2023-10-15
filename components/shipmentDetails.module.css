@@ -1,0 +1,16 @@
+.main{
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+    width: 50vw;
+}
+.freeDelivery{
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-top: 8px;
+}
+.subHeadText{
+    font-weight: 600;
+    margin-top: 30px;
+}

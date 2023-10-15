@@ -1,0 +1,45 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": false,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "pages/ProductDetailsPage/productDetailsPage.jsx",
+    "components/offerImages.js",
+    "pages/home/index.jsx",
+    "components/navigation.jsx",
+    "pages/loginDialog.jsx",
+    "pages/myCart/index.jsx",
+    "pages/profilePage/index.jsx",
+    "pages/index.jsx",
+    "pages/index.js",
+    "pages/_app.js",
+    "pages/blogs/index.jsx",
+    "pages/products/index.jsx",
+    "pages/api/auth/[...nextauth].js",
+    "components/productCard.jsx",
+    "pages/wishList/wishlist.jsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

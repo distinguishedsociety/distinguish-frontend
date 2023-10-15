@@ -1,0 +1,165 @@
+.mainGrid{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 60px 25px;
+
+}
+
+.grid1{
+    width: 50vw;
+}
+.grid2{
+    width: 50vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: end;
+}
+
+.grid2 img{
+    width: 450px;
+    height: 560px;
+}
+.subGrid{
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    padding-left: 100px;
+}
+
+.arrivalGrid{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+}
+.displayProductGrid{
+    margin-top: 4px !important;
+    margin-bottom: 30px;
+}
+
+.latestArrivalsDiv{
+    display: flex !important;
+    flex-direction: column !important;
+    margin-bottom: 80px !important;
+    /* align-items: center !important; */
+}
+
+.home-product-div{
+    height: 250px;
+    width: 50%;
+}
+
+.blogsDiv{
+    position: relative;
+}
+.blogDetails{
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+}
+.blogSubDetails{
+    width: 50%;
+}
+
+#video{
+    width: 100% !important;
+    height: 400px !important;
+}
+.contactDiv{
+    background-image: url(../../public/assets/contactImg.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.blogButtonGrid{
+       
+    position: absolute !important;
+    bottom: 0 !important;
+}
+.subHeadingDiv{
+    white-space: normal; 
+    display: -webkit-box !important;
+  -webkit-line-clamp: 8;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
+.contact{
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 50px;
+    /* or 100% */
+    
+    text-align: center;
+    letter-spacing: 0.05em;
+    
+    color: #FFFFFF;
+}
+
+.email{
+    border: 1px solid #FFFFFF !important;
+    color: #FFFFFF !important;
+}
+.gridItem{
+    padding-top: 0px !important;
+}
+
+.email::placeholder{
+    color: #FFFFFF !important;
+}
+.bannerImage{
+    width: 100vw;
+    height: 85vh;
+    margin-bottom: 24px;
+}
+.heading{
+    text-align: center;
+    width: 100%;
+    padding: 60px 0px 40px 0px;
+    font-size: 30px;
+    font-weight: 500
+}
+.mainGridResponsive{
+    display: none;
+}
+.offereImages{
+    height: 70vh;
+}
+/* Resposive for mobile */
+@media only screen and (max-width: 600px){
+    .mainGrid{
+        display: none;
+    }
+    .mainGridResponsive{
+        display: flex;
+        margin-top: 50px;
+        flex-direction: column;
+    }
+    .grid1Responsive{
+        display: flex;
+        align-items: start;
+        flex-direction: row;
+        overflow: hidden;
+        justify-content: space-around;
+    }
+    .grid1Responsive img{
+        max-width: 42vw;
+    }
+    .blogButtonGrid{
+        position: unset !important;
+        margin-top: 60px !important;
+    }
+.blogSubDetails{
+    width: 100%;
+}
+.blogDetails{
+    flex-direction: column;
+}
+}

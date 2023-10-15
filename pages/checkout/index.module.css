@@ -1,0 +1,105 @@
+.arrivalGrid{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.orderDetailsMain{
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 50vw;
+}
+.orderDetailsMain1{
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 50vw;
+    margin-top: 40px;
+}
+.orderDetailsSub1{
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    width: 100%;
+}
+ .textField{
+    width: 100% !important;
+}
+.mainGrid1{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.detailsGrid{
+    display: flex;
+    flex-direction: column;
+}
+
+.bill{
+    background-color: #F4F4F4;
+    padding: 14px 20px;
+    margin-top: 14px;
+
+}
+.stepper{
+    width: 50vw;
+    margin: 100px 0px 0px 0px;
+    padding: 0px 0px;
+}
+.tableKey{
+    width: 8vw;
+    text-align: left;
+    line-height: 32px;
+}
+.tableValue{
+    width: 12vw;
+    text-align: right;
+    line-height: 32px;
+}
+.subHeadText{
+    font-weight: 600
+}
+.continueButton{
+    background-color: black !important;
+    color: white !important;
+    padding: 8px !important;
+    margin-top: 28px !important;
+}
+.continueButton:hover
+{
+    background-color: white !important;
+    color: black !important;
+    border: 1px solid black !important;
+}
+.backButton{
+    background-color: white !important;
+    border: 1px solid black !important;
+    color: black !important;
+    padding: 8px !important;
+    margin-top: 28px !important;
+    width: 25%;
+    margin-left: 24px;
+}
+.backButton:hover
+{
+    background-color: black !important;
+    color: white !important;
+    border: 1px solid black !important;
+}
+.billGrid{
+    display: flex;
+    flex-direction: column;
+}
+@media only screen and (max-width: 600px){
+    .mainGrid1{
+        flex-direction: column;
+    }
+    .tableKey{
+        width: 25vw;
+    }
+    .tableValue{
+        width: 50vw;
+    }
+}

@@ -1,0 +1,17 @@
+.arrivalGrid{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: 70px;
+}
+.displayProductGrid{
+    margin-top: 4px;
+    margin-bottom: 30px;
+}
+
+.latestArrivalsDiv{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 80px;
+}
