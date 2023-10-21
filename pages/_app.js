@@ -1,4 +1,4 @@
-import React , {useEffect , useContext, useCallback }from 'react';
+import React , {useEffect , useContext, useCallback, useState }from 'react';
 import Head from "next/head";
 import '../styles/globals.css'
 import  { AppProps } from 'next/app'
@@ -30,7 +30,7 @@ function FacebookPixel() {
 function MyApp({ Component,  pageProps: { session, ...pageProps } }) {
     const [loading, setLoading] = React.useState(false);
     const resetWindowScrollPosition = useCallback(() => window.scrollTo(0, 0), []);
-
+    const [cartData, setCartData] = useState([])
 
     Router.events.on('routeChangeStart', () => setLoading(true));
     Router.events.on('routeChangeComplete', () => {
@@ -67,8 +67,8 @@ function MyApp({ Component,  pageProps: { session, ...pageProps } }) {
             <SessionProvider session={session}>
               <UserProvider>
                   <ContextProvider>
-                    <Navigation/>
-                    <Component {...pageProps} />
+                    <Navigation cartData={cartData}/>
+                    <Component {...pageProps} setCartData={setCartData}/>
                   </ContextProvider>
                 </UserProvider>
             </SessionProvider>

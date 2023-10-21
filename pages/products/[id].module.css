@@ -96,21 +96,17 @@
     width: 45vw;
 }
 .imgViewGrid{
-    display: flex;
-    flex-direction: row;
-    gap:12px;
     margin-top: 30px;
     min-width: 400px;
     max-width: 400px;
-    overflow: auto;
 }
 .productImageThumb{
-    width: 80px;
+    width: 100%;
     height: 80px;
     cursor: pointer;
 }
 .productImageThumbSelected{
-    width: 80px;
+    width: 100%;
     height: 80px;
     opacity: 0.5;
     cursor: pointer;
@@ -205,6 +201,14 @@
     width: fit-content;
     margin-left: 14px;
 }
+.slider {
+    margin: 0 10px;
+    overflow: hidden;
+  }
+
+  .react-multi-carousel-list {
+    padding: 0rem 0 2rem 0;
+    }
 @media screen and (max-width: 900px) {
         .productImage{
             height: 430px !important;

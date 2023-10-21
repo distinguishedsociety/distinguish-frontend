@@ -347,7 +347,7 @@ export const fetchDeliveryOptions = async (pincode, country) => {
       headers: {
         authorization: `Bearer ${token}`,
       },
-      data: {
+      data: { 
         pincode: pincode,
         delivery_country: country,
         order_type: "Prepaid",
@@ -361,6 +361,31 @@ export const fetchDeliveryOptions = async (pincode, country) => {
 
     return {data, error}
   } catch (e) {
+    error = e.message   
+    return {data, error}
+  }
+}
+
+export const verfiyCoupon = async (payload, token) => {
+  let data
+  let error
+  
+  try {
+    let result = await axios({
+      url: `http://localhost:3002/internal/api/users/verifyCoupon`,
+      method: 'POST',
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+      data: {
+        code: payload
+      },
+    })
+    if (result.data.status === 'error') {
+      return {data, error: 'An error occurred.'}
+    }
+  return result.data
+  } catch(e){
     error = e.message
     return {data, error}
   }

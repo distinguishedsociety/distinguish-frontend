@@ -45,8 +45,13 @@
 }
 .stepper{
     width: 50vw;
-    margin: 100px 0px 0px 0px;
     padding: 0px 0px;
+}
+.coupon_container{
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 10px
 }
 .tableKey{
     width: 8vw;

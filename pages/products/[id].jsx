@@ -29,16 +29,22 @@ import { Context } from '../../context/country'
 import { signOut, useSession, signIn } from 'next-auth/react'
 import Head from 'next/head'
 import Cookies from 'js-cookie'
-import NewReleaseProductCorousel from '../../components/NewReleaseProductCorousel' 
+import NewReleaseProductCorousel from '../../components/NewReleaseProductCorousel'
+import Carousel from 'react-multi-carousel'
+import 'react-multi-carousel/lib/styles.css'
 
-export default function productDetailsPage({ products, product, index }) {
+export default function productDetailsPage({ products, product, index, setCartData }) {
+  console.log('setCartData',setCartData)
   const { data: session } = useSession()
+  console.log('session',session)
   let [quantity, setQuantity] = useState(1)
   let [size, setSize] = useState(
-    index !== -1 ? Object.keys(product.inventory)[index] : Object.keys(product.inventory)[1]
+    index !== -1
+      ? Object.keys(product.inventory)[index]
+      : Object.keys(product.inventory)[1]
   )
-  console.log("Size state : ", size)
-  console.log("Index : ", index)
+  console.log('Size state : ', size)
+  console.log('Index : ', index)
   let [images, setImages] = useState(product.images)
   let [inventory, setInventory] = useState(product.inventory)
   let [selectedImage, setSelectedImage] = useState(0)
@@ -53,6 +59,19 @@ export default function productDetailsPage({ products, product, index }) {
 
   const handleSizeClose = () => {
     setSizeOpen(false)
+  }
+
+  const responsive = {
+    desktop: {
+      breakpoint: { max: 3000, min: 900 },
+      items: 4,
+      slidesToSlide: 1, // optional, default to 1.
+    },
+    mobile: {
+      breakpoint: { max: 900, min: 0 },
+      items: 3,
+      slidesToSlide: 1, // optional, default to 1.
+    },
   }
 
   function handleUpdate(value) {
@@ -101,8 +120,10 @@ export default function productDetailsPage({ products, product, index }) {
       }
       if (cart) {
         if (value == 1) {
+          setCartData([...cart])
           Router.push('../myCart')
         } else {
+          setCartData([...cart])
           toast.success('Item added to cart', {
             position: 'top-center',
             autoClose: 2000,
@@ -152,10 +173,10 @@ export default function productDetailsPage({ products, product, index }) {
         if (isPresent == false || userCart.length == 0) {
           userCart.push(newProduct)
         }
-        console.log('userCart', userCart)
+        
         Cookies.set('cart', JSON.stringify(userCart))
         const updatedCart = JSON.parse(Cookies.get('cart'))
-        console.log('Final cart', updatedCart)
+        setCartData([...userCart])
         toast.success('Item added to cart', {
           position: 'top-center',
           autoClose: 2000,
@@ -217,51 +238,63 @@ export default function productDetailsPage({ products, product, index }) {
 
         <div className={styles.mainGrid}>
           <div className={styles.imgGrid}>
-            <div className='productImage'>
-            <img
-              className={styles.productImage}
-              src={images[selectedImage]}
-            ></img>
-             {
-                 inventory[size] == 0 || inventory[size]<quantity
-                  ?
-                  <p className={styles.stockNotAvailable}>Out of Stock</p>
-                  :<></>
-            }
+            <div className="productImage">
+              <img
+                className={styles.productImage}
+                src={images[selectedImage]}
+              ></img>
+              {inventory[size] == 0 || inventory[size] < quantity ? (
+                <p className={styles.stockNotAvailable}>Out of Stock</p>
+              ) : (
+                <></>
+              )}
             </div>
-          
-
             <div className={styles.imgViewGrid}>
-              {images.map((image, index) => (
-                <img
-                  className={
-                    index == selectedImage
-                      ? styles.productImageThumbSelected
-                      : styles.productImageThumb
-                  }
-                  src={image}
-                  onClick={() => setSelectedImage(index)}
-                ></img>
-              ))}
+              <Carousel
+                responsive={responsive}
+                autoPlay={false}
+                swipeable={false}
+                draggable={false}
+                infinite={false}
+                partialVisible={false}
+                slidesToSlide={1}
+                dotListClass="custom-dot-list-style"
+              >
+                {images.map((image, index) => (
+                  <div className={styles.slider} key={index}>
+                    <img
+                      className={
+                        index == selectedImage
+                          ? styles.productImageThumbSelected
+                          : styles.productImageThumb
+                      }
+                      src={image}
+                      onClick={() => setSelectedImage(index)}
+                    />
+                  </div>
+                ))}
+              </Carousel>
             </div>
           </div>
           <div className={styles.contentGrid}>
             <h2 className={styles.productName}>{product.title}</h2>
             <p className={styles.description}>{product.description}</p>
             <hr className={styles.divider}></hr>
-            <p style={{color: "#12B76A" , fontSize:"18px"}}>{product.collectionName.title}</p>
+            <p style={{ color: '#12B76A', fontSize: '18px' }}>
+              {product.collectionName.title}
+            </p>
 
-           { 
-           product.isLimitedEdition
-           ?
-           <div className='row' style={{margin:'24px 0px'}}>
-                <span className={styles.stockAvailable}>{product.noOfUnitsOfLimitedEdition} drops only</span>
+            {product.isLimitedEdition ? (
+              <div className="row" style={{ margin: '24px 0px' }}>
+                <span className={styles.stockAvailable}>
+                  {product.noOfUnitsOfLimitedEdition} drops only
+                </span>
                 <span className={styles.limitedEdition}>Limited Edition</span>
-            </div>
-            :
-            <></>
-          }
-          
+              </div>
+            ) : (
+              <></>
+            )}
+
             <p className={styles.productPrice}>
               {typeof window !== 'undefined'
                 ? myData.value.currency +
@@ -279,7 +312,7 @@ export default function productDetailsPage({ products, product, index }) {
                 className={styles.size}
                 placeholder="Select"
                 value={size}
-                variant='outlined'
+                variant="outlined"
               >
                 <MenuItem value={'S'}>Size: S</MenuItem>
                 <MenuItem value={'M'}>Size: M</MenuItem>
@@ -315,7 +348,7 @@ export default function productDetailsPage({ products, product, index }) {
             <p className="productPrice">{product.description}</p> */}
             <div className={styles.sizeGrid}>
               <Button
-                style={{width: '50%'}}
+                style={{ width: '50%' }}
                 className="buttonInvert "
                 onClick={() => addToCart(0)}
                 variant="outlined"
@@ -323,7 +356,7 @@ export default function productDetailsPage({ products, product, index }) {
                 Add to Cart
               </Button>
               <Button
-               style={{width: '50%'}}
+                style={{ width: '50%' }}
                 className="buttonInvert "
                 variant="outlined"
                 onClick={() => addToCart(1)}
@@ -351,7 +384,7 @@ export default function productDetailsPage({ products, product, index }) {
         </div>
         <hr className="insideHr"></hr>
         <div className={styles.latestArrivalsDiv}>
-        <NewReleaseProductCorousel products={products}/>
+          <NewReleaseProductCorousel products={products} />
         </div>
       </Container>
       <Footer />
@@ -368,7 +401,7 @@ export async function getStaticPaths() {
 
   return {
     paths,
-    fallback: 'blocking'
+    fallback: 'blocking',
   }
 }
 

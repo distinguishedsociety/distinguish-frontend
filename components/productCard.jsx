@@ -115,7 +115,7 @@ const ProductCard = (props) => {
                 </div>
               
               <p className='productName mb-0 mt-1'>{productDetails.title}</p>
-              <p className='text-mute collectionName'>{productDetails.collectionName.title}</p>
+              <p className='text-mute collectionName'>{productDetails.category.name}</p>
               <p className='productPrice'>
                   {   
                     myData.value.currency + " " + (productDetails.price * myData.value.currencyRate).toFixed(2)

@@ -18,9 +18,10 @@ import { signOut, useSession, signIn, getSession } from 'next-auth/react'
 import { Context } from '../context/country'
 import { makeStyles } from '@material-ui/core/styles'
 import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt'
-import { getProfile } from '../services/userServices'
+import { getProfile, getCart } from '../services/userServices'
+import Cookies from 'js-cookie';
 
-export default function navigation({ me }) {
+export default function navigation({ cartData }) {
   const myData = useContext(Context)
   const { data: session } = useSession()
   const [drawerState, setDrawerState] = React.useState(false)
@@ -29,12 +30,42 @@ export default function navigation({ me }) {
   const [country, setCountry] = React.useState(myData.value.country)
 
   useEffect(() => {
+    const cookieData = Cookies.get('cart')
+    const parsedData = cookieData ? JSON.parse(cookieData) : []
+    if(cookieData){
+      setCartCount(parsedData.length)
+    }else if(cartData){
+      setCartCount(cartData.length)
+    }else{
+      setCartCount(0)
+    }
+    // const count = cookieData ? parsedData.length : cartData ? cartData.length : 0;
+    // setCartCount(count)
+  },[cartData])
+
+  console.log('cartCount',cartCount)
+  useEffect(() => {
     if (localStorage.getItem('country')) {
       setOpen(false)
     } else {
       setOpen(true)
     }
   }, [])
+
+  useEffect(() => {
+    (async () => {
+      try {
+        var { cart, error } = await getCart(session.id)
+        if (error || !cart) {
+          return { props: { cart: [] } }
+        }
+        setCartCount(cart.length)
+      } catch (e) {
+        console.log(e)
+      }
+    })()
+  },[session])
+  console.log('session',session)
   const handleClose = () => {
     setOpen(false)
   }
@@ -76,9 +107,12 @@ export default function navigation({ me }) {
             </div>
 
             <div>
-              <a className="text-decoration-none text-white" href="/">
+              {/* <a className="text-decoration-none text-white" href="/">
                 <>DISTINGUISHED SOCIETY</>
-              </a>
+              </a> */}
+              <Link href="/">
+                      <li className="text-decoration-none text-white">DISTINGUISHED SOCIETY</li>
+                    </Link>
             </div>
 
             <div>

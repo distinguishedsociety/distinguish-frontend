@@ -19,7 +19,7 @@ export default function offerImages(props) {
     }
   }
   return (
-    <Carousel autoPlay={true} interval={3000} showThumbs={false} infiniteLoop={true}  verticalSwipe="natural">
+    <Carousel showDots={false} autoPlay={true} interval={3000} showThumbs={false} infiniteLoop={true}  verticalSwipe="natural">
    {
      banners?.map((image, index)=>(
       <div onClick={(e)=>redirectImage(image)}>

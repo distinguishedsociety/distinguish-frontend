@@ -14,6 +14,7 @@ import {
   Step,
   StepLabel,
   Button,
+  TextField,
 } from '@mui/material'
 import styles from './index.module.css'
 import axios from 'axios'
@@ -25,7 +26,7 @@ import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useSession, getSession } from 'next-auth/react'
-import { getCart, updateCart } from '../../services/userServices'
+import { getCart, updateCart, verfiyCoupon } from '../../services/userServices'
 import { Context } from '../../context/country'
 import Head from 'next/head'
 import Cookies from 'js-cookie';
@@ -51,10 +52,16 @@ export default function checkout({ cart }) {
   let sum = 0
   const Razorpay = useRazorpay()
 
-  const BASE_URL = 'https://www.thedistinguishedsociety.com/internal/api/users'
-  // const BASE_URL = 'http://localhost:3002/internal/api/users'
+  // const BASE_URL = 'https://www.thedistinguishedsociety.com/internal/api/users'
+  const BASE_URL = 'http://localhost:3002/internal/api/users'
 
   const [deliveryOptions, setDeliveryOptions] = useState()
+  const [promoCodeVisible,setPromoCodeVisible] = useState(false)
+  const [promoCodeValue, setPromoCodeValue] = useState('')
+  const [ discountValue, setDiscountValue] = useState(0)
+  const [ couponData, setCouponData] = useState({})
+  const [ isCodeApplied, setIsCodeApplied] = useState(false)
+  const [ newSubTotal, setNewSubTotal] = useState(0)
 
   useEffect(() => {
     if(!session)
@@ -79,6 +86,37 @@ export default function checkout({ cart }) {
 
     //getCartProducts();
   }, [])
+
+  const handleApplyPromoCode = async () => {
+    const response = await verfiyCoupon(promoCodeValue)
+    if(response){
+      if(!response.status){
+        setCouponData({status: false, data: null})
+        setIsCodeApplied(false)
+        setNewSubTotal(0)
+        setDiscountValue(parseFloat(0))
+      }
+      if(response.status){
+        const twentyPercent = (response.data.discount / 100) * subtotal;
+        const result = subtotal - twentyPercent;
+        const total = parseFloat(result.toFixed(2));
+        setNewSubTotal(total)
+        setDiscountValue(parseFloat(twentyPercent.toFixed(2)))
+        setCouponData({...response})
+        setIsCodeApplied(true)
+      }
+    }else{
+      toast.error('Something went wrong. Please try again', {
+        position: 'top-center',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
+    }
+  }
 
   async function checkShippingPrice() {
     setLoading(true)
@@ -170,11 +208,18 @@ export default function checkout({ cart }) {
       delivery_country: country.isoCode,
       order_type: address.order_type,
       phoneNumber: address.phoneNumber,
+      isCouponApplied: isCodeApplied,
+      discountValue: discountValue
     }
     console.log(address)
     console.log("data" , data)
-    const cart = JSON.parse(Cookies.get("cart"))
-    const guestData = {...data , cart};
+    let guestData = {...data}
+    const cartData = Cookies.get('cart')
+    if(cartData){
+      guestData = {...guestData, cart: [...JSON.parse(cartData)]}
+    }
+    // const cart = JSON.parse(Cookies.get("cart"))
+    // const guestData = {...data , cart};
     console.log("guest data" , guestData)
     let res
     await axios(session?{
@@ -197,7 +242,7 @@ export default function checkout({ cart }) {
          console.log("inside")
           setLoading(false)
           var options = {
-            key_id: 'rzp_live_HRTCJnxkRyWNF2',
+            key_id: 'rzp_test_LTzr2okR5UfYdy',
             amount: res.data.data.paymentId.amount * myData.value.currencyRate,
             currency: 'INR',
             name: 'Distinguished Society',
@@ -341,6 +386,7 @@ export default function checkout({ cart }) {
         <div className={styles.arrivalGrid}>
           <h1 className="heading">Checkout</h1>
         </div>
+        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '30px'}}>
         <Stepper activeStep={activeStep} className={styles.stepper}>
           {steps.map((label, index) => {
             return (
@@ -350,6 +396,24 @@ export default function checkout({ cart }) {
             )
           })}
         </Stepper>
+        <div className={styles.coupon_container}>
+          {!promoCodeVisible && <p style={{margin: 0}} onClick={() => {setPromoCodeVisible(true)}}>Have a Promo Code?</p>}
+          {promoCodeVisible && (
+            <TextField error={couponData?.status == false} value={promoCodeValue} helperText={couponData?.status == false ? 'Invalid coupon code!' : couponData?.status == true ? 'Coupon is applied successfully!' : ''} 
+            variant='outlined' onChange={(e) => setPromoCodeValue(e.target.value)} label='Promo code' name='promoCode' placeholder='type promo code here...'/>
+          )}
+         <Button
+              // className={styles.continueButton}
+              style={{ backgroundColor: 'black', color: 'white', marginTop: '0 !important' }}
+              type="submit"
+              variant="outlined"
+              onClick={handleApplyPromoCode}
+            >
+              Apply
+            </Button>
+
+        </div>
+        </div>
         <div className={styles.mainGrid1}>
           <div>
             <React.Fragment>
@@ -407,15 +471,29 @@ export default function checkout({ cart }) {
                     <hr />
                   </td>
                 </tr>
-
+                {isCodeApplied && <tr>
+                  <td className={styles.tableKey}>Coupon Discount</td>
+                  <td className={styles.tableValue}>
+                    {discountValue}
+                  </td>
+                </tr>}
                 <tr>
                   <td className={styles.tableKey}>Total</td>
-                  <td className={styles.tableValue}>
+                  {isCodeApplied ? <td className={styles.tableValue}>
+                    {(
+                      (parseFloat(newSubTotal) + parseFloat(shippingRate)) *
+                      myData.value.currencyRate
+                    ).toFixed(2)}
+                  </td> : <td className={styles.tableValue}>
                     {(
                       (parseFloat(subtotal) + parseFloat(shippingRate)) *
                       myData.value.currencyRate
                     ).toFixed(2)}
-                  </td>
+                  </td>}
+                </tr>
+                <tr>
+                  <td style={{width: '100%', whiteSpace: 'nowrap'}}>( Including Tax - 12% )</td>
+                  
                 </tr>
               </table>
             </div>

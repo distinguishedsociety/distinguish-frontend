@@ -8,7 +8,7 @@ import Link from "next/link";
 import Head from "next/head";
 import Cookies from 'js-cookie';
 
-export default function OdersStatus() {
+export default function OdersStatus({setCartData}) {
    const router = useRouter();
    let query , est
    const [estDate , setEstDate] = useState()
@@ -17,7 +17,8 @@ export default function OdersStatus() {
        query = router.query;
        est = query.est_date ;
        setEstDate(est)
-   })
+       setCartData([])
+   },[])
   return (
       <>
          {/* <Navigation/> */}
