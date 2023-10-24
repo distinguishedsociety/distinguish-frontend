@@ -58,7 +58,7 @@ export default function productDetailsPage({blog}) {
 
 export async function getStaticPaths()
 {
-    const {blogs , errorsBlogs} = await getAllBlogs();
+    const {blogs = [] , errorsBlogs} = await getAllBlogs();
     const paths = blogs.map((blog)=>({ 
             params: {id : blog._id.toString()} 
     }));
@@ -72,7 +72,7 @@ export async  function getStaticProps({params})
 {
   try {
     
-    const {blog , errorsBlogs} = await getBlog(params.id);
+    const {blog = [] , errorsBlogs} = await getBlog(params.id);
     if (errorsBlogs || !blog) {
       return {  props : {blog : []} };
     }

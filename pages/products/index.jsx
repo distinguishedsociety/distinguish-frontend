@@ -73,7 +73,7 @@ export default function productListPage({products}) {
 export async  function getStaticProps()
 {
   try {
-    const { products, errorsProducts } = await getAllProducts();
+    const { products = [], errorsProducts } = await getAllProducts();
     if (errorsProducts || !products) {
       return {  props : {products : []} };
     }   

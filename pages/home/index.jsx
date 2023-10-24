@@ -178,10 +178,10 @@ const landingPage = ({ products, banners }) => {
 
 export async function getStaticProps() {
   try {
-    const { products, errorsProducts } = await getAllProducts()
-    const { introBanner, errorsIntroBanner } = await getIntroBanner()
-    const { banners, errorsBanners } = await getBanners()
-    const { blogs, errorsBlogs } = await getAllBlogs()
+    const { products = [], errorsProducts } = await getAllProducts()
+    const { introBanner = [], errorsIntroBanner } = await getIntroBanner()
+    const { banners = [], errorsBanners } = await getBanners()
+    const { blogs= [], errorsBlogs } = await getAllBlogs()
     if (errorsProducts || !products) {
       return { props: { products: [] } }
     }

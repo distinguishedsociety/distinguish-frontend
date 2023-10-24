@@ -33,7 +33,7 @@ import NewReleaseProductCorousel from '../../components/NewReleaseProductCorouse
 import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
 
-export default function productDetailsPage({ products, product, index, setCartData }) {
+export default function productDetailsPage({ products = [], product, index, setCartData }) {
   console.log('setCartData',setCartData)
   const { data: session } = useSession()
   console.log('session',session)
@@ -45,7 +45,7 @@ export default function productDetailsPage({ products, product, index, setCartDa
   )
   console.log('Size state : ', size)
   console.log('Index : ', index)
-  let [images, setImages] = useState(product.images)
+  let [images, setImages] = useState(product.images || [])
   let [inventory, setInventory] = useState(product.inventory)
   let [selectedImage, setSelectedImage] = useState(0)
   const [open, setOpen] = React.useState(false)
@@ -137,7 +137,7 @@ export default function productDetailsPage({ products, product, index, setCartDa
       }
     } else {
       const userCart = []
-      let currCart
+      let currCart = [];
       let isPresent = false
       const newProduct = {
         product: product,
@@ -157,7 +157,7 @@ export default function productDetailsPage({ products, product, index, setCartDa
       } else {
         if (Cookies.get('cart')) {
           currCart = JSON.parse(Cookies.get('cart'))
-          currCart.map((item, i) => {
+          currCart?.map((item, i) => {
             if (
               item.product.title == newProduct.product.title &&
               item.size == newProduct.size
@@ -260,7 +260,7 @@ export default function productDetailsPage({ products, product, index, setCartDa
                 slidesToSlide={1}
                 dotListClass="custom-dot-list-style"
               >
-                {images.map((image, index) => (
+                {images.length > 0 ? images.map((image, index) => (
                   <div className={styles.slider} key={index}>
                     <img
                       className={
@@ -272,7 +272,7 @@ export default function productDetailsPage({ products, product, index, setCartDa
                       onClick={() => setSelectedImage(index)}
                     />
                   </div>
-                ))}
+                )) : []}
               </Carousel>
             </div>
           </div>
@@ -393,11 +393,11 @@ export default function productDetailsPage({ products, product, index, setCartDa
 }
 
 export async function getStaticPaths() {
-  const { products, errorsProducts } = await getAllProducts()
+  const { products = [], errorsProducts } = await getAllProducts()
 
-  const paths = products.map((product) => ({
+  const paths = products.length > 0 ? products.map((product) => ({
     params: { id: product.slug.toString() },
-  }))
+  })) : []
 
   return {
     paths,
@@ -407,7 +407,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   try {
-    const { products, errorsProducts } = await getAllProducts()
+    const { products = [], errorsProducts } = await getAllProducts()
     const { product, index, errorsProduct } = await getProduct(params.id)
     if (errorsProducts || !products) {
       return { props: { products: [] } }

@@ -7,7 +7,7 @@ import { useRouter } from "next/router"
 import {getAllBlogs} from '../../services/userServices';
 import Head from "next/head";
 
-export default function blogsListPage({blogs}) {
+export default function blogsListPage({blogs = []}) {
     // const blogs=[
     //     {
     //         name : 'FASHION STATE OF MIND' ,
@@ -79,7 +79,7 @@ export async  function getStaticProps()
 {
   try {
     
-    const {blogs , errorsBlogs} = await getAllBlogs();
+    const {blogs = [] , errorsBlogs} = await getAllBlogs();
    
     if (errorsBlogs || !blogs) {
       return {  props : {blogs : []} };
