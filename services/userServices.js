@@ -2,7 +2,7 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import { signOut, useSession } from 'next-auth/react'
 
-const api = `https://www.thedistinguishedsociety.com/internal/api/users`
+const api = `https://localhost:9000/internal/api/users`
 
 //login user
 export async function login(username, password) {

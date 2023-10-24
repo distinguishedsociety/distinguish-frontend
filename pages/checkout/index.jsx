@@ -53,7 +53,7 @@ export default function checkout({ cart }) {
   const Razorpay = useRazorpay()
 
   // const BASE_URL = 'https://www.thedistinguishedsociety.com/internal/api/users'
-  const BASE_URL = 'http://localhost:3002/internal/api/users'
+  const BASE_URL = 'http://localhost:9000/internal/api/users'
 
   const [deliveryOptions, setDeliveryOptions] = useState()
   const [promoCodeVisible,setPromoCodeVisible] = useState(false)

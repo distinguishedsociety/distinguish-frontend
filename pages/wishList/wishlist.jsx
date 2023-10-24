@@ -22,7 +22,7 @@ export default function wishlist({wishlist}) {
     async function getAllProducts(){
       res = await axios(
         {
-            url: `https://www.thedistinguishedsociety.com/internal/api/users/wishlist` ,
+            url: `https://localhost:9000/internal/api/users/wishlist` ,
             method: "GET",
             headers: {
               'authorization' : localStorage.getItem('user') ?? ""

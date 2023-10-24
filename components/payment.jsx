@@ -26,7 +26,7 @@ export default function payment(props)
         let res;
        res = await axios(
         {
-            url: `https://www.thedistinguishedsociety.com/internal/api/users/placeOrder` ,
+            url: `https://localhost:9000/internal/api/users/placeOrder` ,
             method: "POST",
             headers: {
               'authorization' : localStorage.getItem('user') ?? ""
