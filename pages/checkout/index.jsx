@@ -35,7 +35,6 @@ import { Country, State, City }  from 'country-state-city';
 export default function checkout({ cart }) {
   const { data: session } = useSession()
   const myData = useContext(Context)
-  console.log(myData)
   const steps = ['Order details', 'Shipping details', 'Payment']
   let [shippingRate, setShippingRate] = useState(0)
   const [activeStep, setActiveStep] = React.useState(0)
@@ -53,7 +52,8 @@ export default function checkout({ cart }) {
   const Razorpay = useRazorpay()
 
   // const BASE_URL = 'https://www.thedistinguishedsociety.com/internal/api/users'
-  const BASE_URL = 'http://localhost:9000/internal/api/users'
+  const BASE_URL = 'https://api.thedistinguishedsociety.com/internal/api/users'
+  // const BASE_URL = 'http://localhost:3002/internal/api/users'
 
   const [deliveryOptions, setDeliveryOptions] = useState()
   const [promoCodeVisible,setPromoCodeVisible] = useState(false)
@@ -62,18 +62,19 @@ export default function checkout({ cart }) {
   const [ couponData, setCouponData] = useState({})
   const [ isCodeApplied, setIsCodeApplied] = useState(false)
   const [ newSubTotal, setNewSubTotal] = useState(0)
-
+  const [ codeValue, setCodeValue] = useState('')
   useEffect(() => {
     if(!session)
     {
       if(Cookies.get("cart"))
         cart = JSON.parse(Cookies.get("cart")); 
     } 
+    console.log('cart',cart)
     if (cart) {
       setCartItems(cart)
       setProducts(Object.keys(cart).length)
       cart.map((product, index) => {
-        sum = parseInt(sum) + parseInt(product.product.price)
+        sum = sum + parseInt(product.product.price) * product.qty
       })
       setSubtotal(sum)
       setTax(0.12 * parseInt(subtotal))
@@ -93,6 +94,7 @@ export default function checkout({ cart }) {
       if(!response.status){
         setCouponData({status: false, data: null})
         setIsCodeApplied(false)
+        setPromoCodeValue('')
         setNewSubTotal(0)
         setDiscountValue(parseFloat(0))
       }
@@ -101,9 +103,10 @@ export default function checkout({ cart }) {
         const result = subtotal - twentyPercent;
         const total = parseFloat(result.toFixed(2));
         setNewSubTotal(total)
-        setDiscountValue(parseFloat(twentyPercent.toFixed(2)))
+        setDiscountValue(parseFloat(twentyPercent))
         setCouponData({...response})
         setIsCodeApplied(true)
+        setCodeValue(promoCodeValue)
       }
     }else{
       toast.error('Something went wrong. Please try again', {
@@ -190,11 +193,11 @@ export default function checkout({ cart }) {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1)
   }
-
+ 
   async function proceedToPay() {
    
     setLoading(true)
-    const data = {
+    let data = {
       firstname: address.firstname,
       lastname: address.lastname,
       email: address.email,
@@ -209,7 +212,12 @@ export default function checkout({ cart }) {
       order_type: address.order_type,
       phoneNumber: address.phoneNumber,
       isCouponApplied: isCodeApplied,
-      discountValue: discountValue
+      discountValue: discountValue,
+      'countryCode': myData.value.countryCode,
+      currencyRate: myData.value.currencyRate,
+    }
+    if(codeValue && isCodeApplied){
+      data = {...data, couponCode: codeValue,}
     }
     console.log(address)
     console.log("data" , data)
@@ -221,7 +229,7 @@ export default function checkout({ cart }) {
     // const cart = JSON.parse(Cookies.get("cart"))
     // const guestData = {...data , cart};
     console.log("guest data" , guestData)
-    let res
+    // let res
     await axios(session?{
       url: `${BASE_URL}/placeOrder`,
       method: 'POST',
@@ -242,7 +250,7 @@ export default function checkout({ cart }) {
          console.log("inside")
           setLoading(false)
           var options = {
-            key_id: 'rzp_test_LTzr2okR5UfYdy',
+            key_id: 'rzp_live_URXDIEVhrVJJrU',
             amount: res.data.data.paymentId.amount * myData.value.currencyRate,
             currency: 'INR',
             name: 'Distinguished Society',
@@ -282,7 +290,7 @@ export default function checkout({ cart }) {
         }
       })
       .catch((error) => {
-        setLoading(false)
+        // setLoading(false)
         toast.error('Something went wrong. Please try again', {
           position: 'top-center',
           autoClose: 2000,
@@ -292,19 +300,21 @@ export default function checkout({ cart }) {
           draggable: true,
           progress: undefined,
         })
+        setLoading(false)
       })
 
-    if (!res) {
-      toast.error('Something went wrong. Please try again', {
-        position: 'top-center',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      })
-    }
+    // if (!res) {
+    //   toast.error('Something went wrong. Please try again', {
+    //     position: 'top-center',
+    //     autoClose: 2000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //   })
+    //   setLoading(false)
+    // }
   }
 
   function displayStepContent(index) {
@@ -356,9 +366,15 @@ export default function checkout({ cart }) {
       </div>
     )
   }
+
+  const handleKeyDown = (e) => {
+    if(e.which == 13){
+      handleApplyPromoCode()
+    }
+  }
   return (
     <>
-      <ToastContainer/>
+      {/* <ToastContainer/> */}
       {/* <Navigation/> */}
       <Head>
         {/* <meta name="description" content="Distinguished Society is for the upcoming visionaries, the ones who speak with their art and creativity. The ones who choose the harder path for a greater purpose. The ones who believe that creativity is the measure of a persons greatness. The Creative Geniuses."  ></meta> */}
@@ -397,14 +413,14 @@ export default function checkout({ cart }) {
           })}
         </Stepper>
         <div className={styles.coupon_container}>
-          {!promoCodeVisible && <p style={{margin: 0}} onClick={() => {setPromoCodeVisible(true)}}>Have a Promo Code?</p>}
-          {promoCodeVisible && (
+          
             <TextField error={couponData?.status == false} value={promoCodeValue} helperText={couponData?.status == false ? 'Invalid coupon code!' : couponData?.status == true ? 'Coupon is applied successfully!' : ''} 
-            variant='outlined' onChange={(e) => setPromoCodeValue(e.target.value)} label='Promo code' name='promoCode' placeholder='type promo code here...'/>
-          )}
+            variant='outlined' onChange={(e) => setPromoCodeValue(e.target.value)} onKeyDown={handleKeyDown} label='Promo code' name='promoCode' placeholder='type promo code here...' size='small'
+            />
+          
          <Button
               // className={styles.continueButton}
-              style={{ backgroundColor: 'black', color: 'white', marginTop: '0 !important' }}
+              style={{ backgroundColor: 'black', color: 'white', marginTop: '0 !important', height: '40px' }}
               type="submit"
               variant="outlined"
               onClick={handleApplyPromoCode}
@@ -444,13 +460,13 @@ export default function checkout({ cart }) {
                 <tr>
                   <td className={styles.tableKey}>Subtotal</td>
                   <td className={styles.tableValue}>
-                    {(subtotal * myData.value.currencyRate).toFixed(2)}
+                    {myData.value.countryCode + " " + (subtotal * myData.value.currencyRate).toFixed(2)}
                   </td>
                 </tr>
                 <tr>
                   <td className={styles.tableKey}>Shipping</td>
                   <td className={styles.tableValue}>
-                    {(shippingRate * myData.value.currencyRate).toFixed(2)}
+                    {myData.value.countryCode + " " + (shippingRate * myData.value.currencyRate).toFixed(2)}
                   </td>
                 </tr>
                 {/* <tr>
@@ -474,27 +490,27 @@ export default function checkout({ cart }) {
                 {isCodeApplied && <tr>
                   <td className={styles.tableKey}>Coupon Discount</td>
                   <td className={styles.tableValue}>
-                    {discountValue}
+                    {myData.value.countryCode + " " + (discountValue * myData.value.currencyRate).toFixed(2)}
                   </td>
                 </tr>}
                 <tr>
                   <td className={styles.tableKey}>Total</td>
                   {isCodeApplied ? <td className={styles.tableValue}>
-                    {(
+                    {myData.value.countryCode + " " +(
                       (parseFloat(newSubTotal) + parseFloat(shippingRate)) *
                       myData.value.currencyRate
                     ).toFixed(2)}
                   </td> : <td className={styles.tableValue}>
-                    {(
+                    {myData.value.countryCode + " " +(
                       (parseFloat(subtotal) + parseFloat(shippingRate)) *
                       myData.value.currencyRate
                     ).toFixed(2)}
                   </td>}
                 </tr>
-                <tr>
+                {/* <tr>
                   <td style={{width: '100%', whiteSpace: 'nowrap'}}>( Including Tax - 12% )</td>
                   
-                </tr>
+                </tr> */}
               </table>
             </div>
             {activeStep != 0 ? (

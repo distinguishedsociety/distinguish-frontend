@@ -13,7 +13,7 @@ import axios from 'axios';
 import { Alert } from '@mui/material';
 
 // const BASE_URL = 'https://www.thedistinguishedsociety.com/internal/api/users'
-const BASE_URL = 'http://localhost:9000/internal/api/users'
+const BASE_URL = 'https://api.thedistinguishedsociety.com/internal/api/users'
 
 export default function index() {
     const router = useRouter();

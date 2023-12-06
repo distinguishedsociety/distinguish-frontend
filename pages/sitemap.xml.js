@@ -7,7 +7,7 @@ const Sitemap = () => {
 };
 
 export const getServerSideProps = async ({ res }) => {
-  const BASE_URL = "https://localhost:9000";
+  const BASE_URL = "https://api.thedistinguishedsociety.com";
 
   const pagesDir = "pages/**/*.jsx";
     let pagesPaths = await glob.sync(pagesDir);

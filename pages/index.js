@@ -9,6 +9,9 @@ import 'bootstrap/dist/css/bootstrap.css'
 const Home = ( {products , banners} ) => {
   return (
       <LandingPage products={products}  banners={banners}/>
+      // <div style={{width: '100%'}}>
+      // <img style={{height: 'calc(100vh - 60px)', width: '100%'}} src='https://static.vecteezy.com/system/resources/previews/013/682/803/original/illustration-site-under-maintenance-vector.jpg'></img>
+      // </div>
   )
 }
 

@@ -22,7 +22,7 @@ const NewReleaseProductCorousel = ({products}) => {
                       className={styles.displayProductGrid}
                       >         
               {
-                products && products.map((product, index)=>(                    
+                products && products.map((product, index)=>(                 
                     <Grid className={styles.gridItem} item xs={6} md={3} >               
                           <ProductCard data={product}/>        
                     </Grid>

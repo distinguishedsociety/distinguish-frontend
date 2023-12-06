@@ -34,8 +34,8 @@ export default function index() {
       For more information about our privacy practices, if you have questions,
        or if you would like to make a complaint, please contact us by e-mail 
        at {""}
-       <a className={styles.link} href="mailto:support@thedistinguishedsociety.com">
-         support@thedistinguishedsociety.com 
+       <a className={styles.link} href="mailto:distinguishedsocietysales@gmail.com">
+          distinguishedsocietysales@gmail.com 
         </a>
        <br/>or by mail using the details provided below:
        <br/>

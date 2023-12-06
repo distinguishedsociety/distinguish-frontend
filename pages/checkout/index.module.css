@@ -49,7 +49,7 @@
 }
 .coupon_container{
     display: flex;
-    align-items: center;
+    align-items: start;
     justify-content: end;
     gap: 10px
 }

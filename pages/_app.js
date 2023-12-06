@@ -9,6 +9,7 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { SessionProvider } from "next-auth/react";
 import  ContextProvider from "../context/country"
 import UserProvider from "../context/user";
+import { ToastContainer } from 'react-toastify';
 
 function FacebookPixel() {
   React.useEffect(() => {
@@ -59,6 +60,7 @@ function MyApp({ Component,  pageProps: { session, ...pageProps } }) {
         <link rel="manifest" href="assets/site.webmanifest"></link>
     </Head>
     <FacebookPixel />
+    <ToastContainer/>
        { loading?
           <div className=" mainpage bg-gray-50" >
               <Triangle color="black" height={60} width={60} />    

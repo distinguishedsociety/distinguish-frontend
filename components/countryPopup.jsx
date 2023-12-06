@@ -1,39 +1,44 @@
-import  React,  {useContext} from 'react';
+import  React,  {useContext, useEffect, useState} from 'react';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import {TextField , Box , Autocomplete , Dialog ,DialogActions,Container, Button } from '@mui/material';
-import {countries} from "../utils/countries.js"
 import {convertCurrency} from "../services/currencyConversion"
 import {Context} from '../context/country';
+import axios from 'axios';
 
 
 
 export default function CountryPopup(props) {
-  const countriesList = countries;
   const myData= useContext(Context)
   //const [selectedCountry , setSelectedCountry] = React.useState(myData.value);
   const [inputValue, setInputValue] = React.useState();
-  const [value, setValue] = React.useState();
+  const [countryValue, setValue] = React.useState();
+  const [countries,setCountries] = useState([])
   const [error, setError] = React.useState(null);
 
- async function setCountry(){
-   
-    localStorage.setItem("country" , inputValue)
-    const country= await countries.filter(function (i,n){
-      return i.countryName == inputValue
-    })
-    
-    let response , error
-    if(country)
-    {
-      const countryCode = country[0].currencyCode;
-      localStorage.setItem("countryCode" , country[0].countryCode)
-     
-       response = await convertCurrency(countryCode)
+  useEffect(() => {
+    const getContinent = async () => {
+      const result = await axios.get(
+        "https://api.thedistinguishedsociety.com/internal/api/admin/get-continent"
+      );
+      if(result.data.status == 'success'){
+        const updateddta = result.data.data.length > 0 && result.data.data.sort((a, b) => a.name.localeCompare(b.name))
+        const newData = updateddta.map(item => {
+          return {...item, name:item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+        })
+        setCountries([...newData])
+      }
     }
-   if(response)
-   {
+    getContinent()
+  },[])
+  console.log('value-->',countryValue)
+ async function handleCountry(){
+   console.log('value',countryValue)
+    localStorage.setItem("country" , countryValue.name)
+    localStorage.setItem("currencyRate" , countryValue.currencyRate)
+    localStorage.setItem("currency" , countryValue.countryCode)
+    localStorage.setItem("countryCode" , countryValue.countryCode)
     props.setCountry(inputValue)
     const value = {
       country : localStorage.getItem('country'),
@@ -46,7 +51,7 @@ export default function CountryPopup(props) {
     //setSelectedCountry(myData.value)
     props.handleClose()
     
-   }
+  //  }
   }
  
       
@@ -59,17 +64,6 @@ export default function CountryPopup(props) {
           country: Yup.string()
             .required('Please select your country'),
         })}
-        onSubmit={ (values, { setSubmitting }) => {
-        
-          const res =  setCountry();
-         
-          if(res)
-          {
-            props.setCountry(inputValue)
-            props.handleClose()
-          }
-          setSubmitting(false);
-        }}
       >
      {
     (formik) => (
@@ -93,7 +87,7 @@ export default function CountryPopup(props) {
               options={countries}
               style={{marginBottom : "20px" , marginTop : "20px"}}
               autoHighlight
-              value={value}
+              value={countryValue}
               displayEmpty
               onChange={(event, newValue) => {
                 setValue(newValue);
@@ -102,17 +96,10 @@ export default function CountryPopup(props) {
               onInputChange={(event, newInputValue) => {
                 setInputValue(newInputValue)
               }}
-              getOptionLabel={(option) => option.countryName}
+              getOptionLabel={(option) => option.name}
               renderOption={(props, option) => (
                 <Box  component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                  <img
-                    loading="lazy"
-                    width="20"
-                    src={`https://flagcdn.com/w20/${option.countryCode.toLowerCase()}.png`}
-                    srcSet={`https://flagcdn.com/w40/${option.countryCode.toLowerCase()}.png 2x`}
-                    alt=""
-                  />
-                  {option.countryName} ({option.countryCode}) 
+                  {option.name} ({option.countryCode.toUpperCase()}) 
                 </Box>
               )}
               renderInput={(params) => (
@@ -126,7 +113,7 @@ export default function CountryPopup(props) {
                 />
               )}
             />
-            <Button onClick={()=>setCountry()} className='buttonInvert  w-full' style={{margiTop : "18px"}}>Continue</Button>
+            <Button type='button' onClick={()=>handleCountry()} className='buttonInvert  w-full' style={{margiTop : "18px"}}>Continue</Button>
                 </form>
         </DialogActions>
         </Container>

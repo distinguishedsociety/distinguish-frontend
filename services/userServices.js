@@ -2,7 +2,7 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import { signOut, useSession } from 'next-auth/react'
 
-const api = `https://localhost:9000/internal/api/users`
+const api = `https://api.thedistinguishedsociety.com/internal/api/users`
 
 //login user
 export async function login(username, password) {
@@ -372,7 +372,7 @@ export const verfiyCoupon = async (payload, token) => {
   
   try {
     let result = await axios({
-      url: `http://localhost:3002/internal/api/users/verifyCoupon`,
+      url: `https://api.thedistinguishedsociety.com/internal/api/users/verifyCoupon`,
       method: 'POST',
       headers: {
         authorization: `Bearer ${token}`,
